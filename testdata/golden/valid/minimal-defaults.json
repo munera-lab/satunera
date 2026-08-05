@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "week-1",
+  "title": "Spend a P2WPKH output",
+  "category": "transactions",
+  "difficulty": "easy",
+  "languages": [
+    "py"
+  ],
+  "fixture": "funded-p2wpkh"
+}

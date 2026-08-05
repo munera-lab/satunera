@@ -1,0 +1,5 @@
+{
+  "file": "problem",
+  "pointer": "/languages/1",
+  "reason": "`go` is not a supported language; only rust, py, and cpp have toolchain images."
+}

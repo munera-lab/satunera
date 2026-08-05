@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://satunera.dev/schemas/problem.schema.json",
+  "title": "problem.json",
+  "description": "Manifest for one problem. Lives at the root of a week-N/ directory and marks that directory as a problem.",
+  "type": "object",
+  "required": ["schema_version", "id", "title", "category", "difficulty", "languages", "fixture"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "description": "Manifest format version. Bumped only by a breaking change to this schema.",
+      "const": 1
+    },
+    "id": {
+      "description": "Stable problem identifier. Must equal the name of the directory holding this file.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "title": {
+      "description": "Human-readable name shown in the catalog.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "category": {
+      "description": "Category id. Must be declared in content/config.json.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 64
+    },
+    "difficulty": {
+      "description": "Relative difficulty, used for filtering in the catalog.",
+      "enum": ["easy", "medium", "hard"]
+    },
+    "languages": {
+      "description": "Languages this problem accepts. Each one needs a srcs/<lang>/ scaffold and a solutions/<lang>/ reference solution.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["rust", "py", "cpp"] }
+    },
+    "fixture": {
+      "description": "Name of the regtest snapshot restored before the run phase.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "services": {
+      "description": "Bitcoin services attached to the job network. bitcoind is always on.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bitcoind": { "const": true, "default": true },
+        "lnd": { "type": "boolean", "default": false },
+        "electrs": { "type": "boolean", "default": false }
+      }
+    },
+    "limits": {
+      "description": "Per-job ceilings for the run phase. The build phase timeout is a runner constant, not a per-problem field.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "wall_sec": {
+          "description": "Wall-clock ceiling for validation.sh, enforced by the runner.",
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 300,
+          "default": 30
+        },
+        "memory_mb": {
+          "description": "Memory cap for the user container.",
+          "type": "integer",
+          "minimum": 128,
+          "maximum": 2048,
+          "default": 512
+        }
+      }
+    }
+  }
+}

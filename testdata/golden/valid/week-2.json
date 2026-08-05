@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "id": "week-2",
+  "title": "Build and sign a PSBT",
+  "category": "psbt",
+  "difficulty": "medium",
+  "languages": [
+    "rust",
+    "py",
+    "cpp"
+  ],
+  "fixture": "funded-p2wpkh",
+  "limits": {
+    "wall_sec": 45
+  }
+}

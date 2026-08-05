@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "id": "week-1",
+  "title": "Spend a P2WPKH output",
+  "category": "transactions",
+  "difficulty": "easy",
+  "languages": [
+    "rust",
+    "py",
+    "cpp"
+  ],
+  "fixture": "funded-p2wpkh",
+  "limits": {
+    "wall_sec": 3600
+  }
+}

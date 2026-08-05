@@ -1,0 +1,5 @@
+{
+  "file": "problem",
+  "pointer": "",
+  "reason": "Unknown fields are refused rather than ignored; `hints` is a phase-2 idea and a typo today."
+}

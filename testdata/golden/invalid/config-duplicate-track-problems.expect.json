@@ -1,0 +1,5 @@
+{
+  "file": "config",
+  "pointer": "/tracks/0/problems",
+  "reason": "A problem listed twice in one track means the learner sees it twice in the sequence."
+}

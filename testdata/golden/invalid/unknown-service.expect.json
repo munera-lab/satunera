@@ -1,0 +1,5 @@
+{
+  "file": "problem",
+  "pointer": "/services",
+  "reason": "Only bitcoind, lnd, and electrs exist; anything else has no image and no network wiring."
+}

@@ -1,0 +1,5 @@
+{
+  "file": "config",
+  "pointer": "/tracks/0/problems",
+  "reason": "A track with no problems renders as an empty page in the catalog."
+}

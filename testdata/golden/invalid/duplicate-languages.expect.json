@@ -1,0 +1,5 @@
+{
+  "file": "problem",
+  "pointer": "/languages",
+  "reason": "`languages` must be unique; a repeated entry means a duplicated scaffold check."
+}

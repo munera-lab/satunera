@@ -1,0 +1,5 @@
+{
+  "file": "config",
+  "pointer": "/categories",
+  "reason": "`categories` needs at least one entry; every problem must name a category that exists."
+}

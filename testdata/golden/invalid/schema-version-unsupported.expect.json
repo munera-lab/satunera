@@ -1,0 +1,5 @@
+{
+  "file": "problem",
+  "pointer": "/schema_version",
+  "reason": "`schema_version` must be 1; a future version means this judge cannot be trusted to read the file."
+}

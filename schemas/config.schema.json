@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://satunera.dev/schemas/config.schema.json",
+  "title": "config.json",
+  "description": "Instance configuration for one content repository. Lives at content/config.json and is the source of truth for the catalog and the deployment profiles.",
+  "type": "object",
+  "required": ["schema_version", "title", "categories", "tracks"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "description": "Config format version. Bumped only by a breaking change to this schema.",
+      "const": 1
+    },
+    "title": {
+      "description": "Instance name shown in the catalog header.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "features": {
+      "description": "Optional service groups. `make config` turns these into COMPOSE_PROFILES.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lightning": { "type": "boolean", "default": false },
+        "indexer": { "type": "boolean", "default": false },
+        "objectstore": { "type": "boolean", "default": false },
+        "observability": { "type": "boolean", "default": false }
+      }
+    },
+    "categories": {
+      "description": "Every category a problem may declare.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "maxLength": 64
+          },
+          "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "description": { "type": "string", "maxLength": 500 }
+        }
+      }
+    },
+    "tracks": {
+      "description": "Ordered sequences of problems. A problem may appear in more than one track.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "problems"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "maxLength": 64
+          },
+          "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "problems": {
+            "description": "Problem ids in the order a learner should meet them.",
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+              "maxLength": 64
+            }
+          }
+        }
+      }
+    }
+  }
+}

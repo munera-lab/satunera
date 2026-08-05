@@ -1,0 +1,5 @@
+{
+  "file": "problem",
+  "pointer": "/services/bitcoind",
+  "reason": "`services.bitcoind` cannot be false; a problem with no node is not a problem this judge runs."
+}
