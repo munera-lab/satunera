@@ -1,0 +1,5 @@
+{
+  "file": "config",
+  "pointer": "/features",
+  "reason": "`features.mempool` is not a deployment profile; `make config` would write a COMPOSE_PROFILES value nothing answers to."
+}

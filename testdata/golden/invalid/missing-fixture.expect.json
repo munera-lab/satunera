@@ -1,0 +1,5 @@
+{
+  "file": "problem",
+  "pointer": "",
+  "reason": "`fixture` is required; the runner has no chain state to restore without it."
+}

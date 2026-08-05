@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "title": "Bitcoin Online Judge",
+  "categories": [],
+  "tracks": [
+    {
+      "id": "core",
+      "title": "Core track",
+      "problems": [
+        "week-1"
+      ]
+    }
+  ]
+}

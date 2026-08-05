@@ -1,0 +1,5 @@
+{
+  "file": "problem",
+  "pointer": "/limits/memory_mb",
+  "reason": "`limits.memory_mb` is at least 128; a smaller cap kills the toolchain, not the submission."
+}

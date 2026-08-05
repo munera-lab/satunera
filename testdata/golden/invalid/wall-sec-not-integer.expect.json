@@ -1,0 +1,5 @@
+{
+  "file": "problem",
+  "pointer": "/limits/wall_sec",
+  "reason": "`limits.wall_sec` is whole seconds; fractional timeouts are not expressible in the sandbox."
+}

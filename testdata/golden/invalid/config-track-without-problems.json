@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "title": "Bitcoin Online Judge",
+  "categories": [
+    {
+      "id": "transactions",
+      "title": "Transactions"
+    }
+  ],
+  "tracks": [
+    {
+      "id": "core",
+      "title": "Core track",
+      "problems": []
+    }
+  ]
+}

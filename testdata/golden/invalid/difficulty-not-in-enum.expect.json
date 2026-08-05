@@ -1,0 +1,5 @@
+{
+  "file": "problem",
+  "pointer": "/difficulty",
+  "reason": "`difficulty` is one of easy, medium, hard; the catalog filter depends on the closed set."
+}

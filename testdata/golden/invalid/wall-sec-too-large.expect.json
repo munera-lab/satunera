@@ -1,0 +1,5 @@
+{
+  "file": "problem",
+  "pointer": "/limits/wall_sec",
+  "reason": "`limits.wall_sec` is capped at 300; a longer job starves the shared runner."
+}

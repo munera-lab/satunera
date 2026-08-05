@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "id": "week-9",
+  "title": "Open a channel",
+  "category": "lightning",
+  "difficulty": "hard",
+  "languages": [
+    "rust",
+    "py",
+    "cpp"
+  ],
+  "fixture": "two-node-funded",
+  "services": {
+    "bitcoind": true,
+    "lnd": true,
+    "electrs": false
+  },
+  "limits": {
+    "wall_sec": 120,
+    "memory_mb": 1024
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "file": "problem",
+  "pointer": "/id",
+  "reason": "`id` must be lowercase kebab-case; it doubles as a directory name and a URL segment."
+}

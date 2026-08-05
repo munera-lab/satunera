@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "id": "week-4",
+  "title": "Read a block header",
+  "category": "transactions",
+  "difficulty": "easy",
+  "languages": [
+    "rust"
+  ],
+  "fixture": "empty-chain",
+  "limits": {
+    "wall_sec": 5,
+    "memory_mb": 128
+  }
+}

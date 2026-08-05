@@ -1,0 +1,5 @@
+{
+  "file": "problem",
+  "pointer": "/limits",
+  "reason": "`limits.cpus` does not exist; CPU share is fixed by the sandbox, not per problem."
+}

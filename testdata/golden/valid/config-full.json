@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "title": "Munera Labs Bitcoin Judge",
+  "categories": [
+    {
+      "id": "transactions",
+      "title": "Transactions",
+      "description": "Building and broadcasting."
+    },
+    {
+      "id": "psbt",
+      "title": "PSBT",
+      "description": "The format wallets actually exchange."
+    },
+    {
+      "id": "fees",
+      "title": "Fees"
+    },
+    {
+      "id": "lightning",
+      "title": "Lightning"
+    }
+  ],
+  "tracks": [
+    {
+      "id": "core",
+      "title": "Core track",
+      "problems": [
+        "week-1",
+        "week-2",
+        "week-3"
+      ]
+    },
+    {
+      "id": "lightning",
+      "title": "Lightning track",
+      "problems": [
+        "week-9"
+      ]
+    }
+  ],
+  "features": {
+    "lightning": true,
+    "indexer": true,
+    "objectstore": false,
+    "observability": true
+  }
+}

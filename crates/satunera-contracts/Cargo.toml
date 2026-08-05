@@ -1,0 +1,13 @@
+[package]
+name = "satunera-contracts"
+description = "Frozen interfaces between problem authors and the judge: config.json, problem.json, the validation.sh verdict, and the ProblemSource trait."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+jsonschema = { workspace = true }
+thiserror = { workspace = true }

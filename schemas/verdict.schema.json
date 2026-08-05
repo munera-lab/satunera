@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://satunera.dev/schemas/verdict.schema.json",
+  "title": "validation.sh verdict",
+  "description": "The single JSON object on the last line of stdout from validation.sh. The process exit code decides acceptance; this object explains it.",
+  "type": "object",
+  "required": ["ok"],
+  "additionalProperties": false,
+  "properties": {
+    "ok": {
+      "description": "Whether the submission satisfied the problem. Must agree with the exit code: true with exit 0, false with a non-zero exit. A disagreement is an authoring bug and yields IE.",
+      "type": "boolean"
+    },
+    "message": {
+      "description": "Why the submission failed, in the learner's terms. Required when ok is false. Name what is wrong, not how to fix it.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "testcase": {
+      "description": "1-based index of the check that failed, for problems that run several.",
+      "type": "integer",
+      "minimum": 1
+    }
+  },
+  "if": { "properties": { "ok": { "const": false } }, "required": ["ok"] },
+  "then": { "required": ["message"] }
+}

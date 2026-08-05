@@ -1,0 +1,5 @@
+{
+  "file": "problem",
+  "pointer": "/id",
+  "reason": "`id` is capped at 64 characters so it fits a database column and a URL."
+}
