@@ -1,0 +1,7 @@
+* text=auto eol=lf
+
+# Generated, committed on purpose, not worth reviewing by hand.
+# Collapsed in pull requests; still readable with `git diff -- Cargo.lock`.
+Cargo.lock linguist-generated=true
+.sqlx/*.json linguist-generated=true
+
