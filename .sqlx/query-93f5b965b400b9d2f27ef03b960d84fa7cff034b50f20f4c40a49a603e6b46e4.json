@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT status, started_at FROM submissions WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "status",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "started_at",
+        "ordinal": 1,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      true
+    ]
+  },
+  "hash": "93f5b965b400b9d2f27ef03b960d84fa7cff034b50f20f4c40a49a603e6b46e4"
+}

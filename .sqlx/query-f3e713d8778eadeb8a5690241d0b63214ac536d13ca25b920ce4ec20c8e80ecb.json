@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE submissions SET status = ?, started_at = ? WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "f3e713d8778eadeb8a5690241d0b63214ac536d13ca25b920ce4ec20c8e80ecb"
+}
