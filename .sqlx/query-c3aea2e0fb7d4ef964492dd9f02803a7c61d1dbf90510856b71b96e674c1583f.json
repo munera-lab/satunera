@@ -1,0 +1,80 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id, user_id, problem_id, language, source_hash, source_uri,\n                    status, verdict, created_at, started_at, finished_at\n             FROM submissions\n             WHERE user_id = ? AND source_hash = ? AND verdict IS NOT NULL\n             ORDER BY id DESC\n             LIMIT 1",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "user_id",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "problem_id",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "language",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "source_hash",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "source_uri",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "status",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "verdict",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at",
+        "ordinal": 8,
+        "type_info": "Text"
+      },
+      {
+        "name": "started_at",
+        "ordinal": 9,
+        "type_info": "Text"
+      },
+      {
+        "name": "finished_at",
+        "ordinal": 10,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "c3aea2e0fb7d4ef964492dd9f02803a7c61d1dbf90510856b71b96e674c1583f"
+}

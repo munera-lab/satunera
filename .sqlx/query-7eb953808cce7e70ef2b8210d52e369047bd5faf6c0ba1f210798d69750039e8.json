@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT solved_at, attempts\n             FROM user_progress\n             WHERE user_id = ? AND problem_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "solved_at",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "attempts",
+        "ordinal": 1,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      true,
+      false
+    ]
+  },
+  "hash": "7eb953808cce7e70ef2b8210d52e369047bd5faf6c0ba1f210798d69750039e8"
+}

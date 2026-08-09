@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE user_progress\n                 SET attempts = attempts + 1,\n                     solved_at = CASE\n                         WHEN solved_at IS NULL THEN ?\n                         ELSE solved_at\n                     END\n                 WHERE user_id = ? AND problem_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "9bf09178c368dc942b9cecb005f934ab7d67daab4df023d5c4877391d3a9fb1f"
+}

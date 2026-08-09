@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO submissions\n                 (id, user_id, problem_id, language, source_hash, source_uri,\n                  status, created_at)\n             VALUES (?, ?, ?, ?, ?, ?, 'QUEUED', ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 7
+    },
+    "nullable": []
+  },
+  "hash": "f28aa601670cd1a7463b8c01a552fb6da5ec17dc421d937581c594e80c56e05c"
+}
