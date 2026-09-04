@@ -91,14 +91,16 @@ impl SubmissionStatus {
     }
 
     /// The lifecycle only moves forward. A retry after `SE`/`IE` re-enters at
-    /// `Preparing`, which is the one legal backwards edge.
+    /// `Preparing`, which is the one legal backwards edge — including from
+    /// `Preparing` itself, so crash recovery can restart a submission that
+    /// died there.
     pub fn can_transition_to(self, next: SubmissionStatus) -> bool {
         use SubmissionStatus::*;
         match (self, next) {
             (Done, _) => false,
             (_, Queued) => false,
             // Retry path: a failed attempt starts over.
-            (Building | Booting | Running, Preparing) => true,
+            (Preparing | Building | Booting | Running, Preparing) => true,
             (Queued, Preparing) => true,
             (Preparing, Building | Booting | Running | Done) => true,
             (Building, Booting | Running | Done) => true,
@@ -255,10 +257,12 @@ mod tests {
     }
 
     #[test]
-    fn retry_reenters_at_preparing() {
+    fn retry_reenters_at_preparing_from_every_active_state() {
         use SubmissionStatus::*;
-        for from in [Building, Booting, Running] {
-            assert!(from.can_transition_to(Preparing));
+        // Including Preparing itself: crash recovery restarts a submission
+        // that died there, and forbidding the self-edge left it stuck forever.
+        for from in [Preparing, Building, Booting, Running] {
+            assert!(from.can_transition_to(Preparing), "{from} -> Preparing");
         }
     }
 

@@ -61,6 +61,17 @@ impl SqliteStore {
     pub fn pool(&self) -> &SqlitePool {
         &self.pool
     }
+
+    /// A write transaction that takes the write lock up front.
+    ///
+    /// The default deferred `BEGIN` acquires the lock at the first write, so
+    /// two connections doing check-then-write on the same row both read, and
+    /// the loser dies with `SQLITE_BUSY_SNAPSHOT` — which `busy_timeout` does
+    /// not retry. `BEGIN IMMEDIATE` serializes the whole transaction against
+    /// other writers instead.
+    async fn begin_immediate(&self) -> Result<sqlx::Transaction<'_, sqlx::Sqlite>, StoreError> {
+        Ok(self.pool.begin_with("BEGIN IMMEDIATE").await?)
+    }
 }
 
 fn now() -> String {
@@ -236,14 +247,13 @@ impl Store for SqliteStore {
     }
 
     async fn replace_problems(&self, problems: Vec<ProblemRow>) -> Result<(), StoreError> {
-        let mut tx = self.pool.begin().await?;
+        let mut tx = self.begin_immediate().await?;
 
-        sqlx::query!("DELETE FROM problems")
-            .execute(&mut *tx)
-            .await?;
-
-        for problem in problems {
-            let id = problem.id.as_str().to_string();
+        // Upsert rather than delete-and-reinsert: submissions foreign-key
+        // into this table, and immediate FKs are checked per statement, so a
+        // bulk DELETE would fail the moment any submission exists.
+        for problem in &problems {
+            let id = problem.id.as_str();
             let updated_at = problem
                 .updated_at
                 .format(&Rfc3339)
@@ -251,7 +261,14 @@ impl Store for SqliteStore {
             sqlx::query!(
                 "INSERT INTO problems
                      (id, commit_sha, title, category, difficulty, manifest, updated_at)
-                 VALUES (?, ?, ?, ?, ?, ?, ?)",
+                 VALUES (?, ?, ?, ?, ?, ?, ?)
+                 ON CONFLICT (id) DO UPDATE SET
+                     commit_sha = excluded.commit_sha,
+                     title = excluded.title,
+                     category = excluded.category,
+                     difficulty = excluded.difficulty,
+                     manifest = excluded.manifest,
+                     updated_at = excluded.updated_at",
                 id,
                 problem.commit_sha,
                 problem.title,
@@ -262,6 +279,22 @@ impl Store for SqliteStore {
             )
             .execute(&mut *tx)
             .await?;
+        }
+
+        // Targeted delete of ids no longer in the content repo. Removing a
+        // problem that already has submissions violates the foreign key and
+        // fails the boot loudly, which beats orphaning the learner's history.
+        let keep: std::collections::HashSet<&str> =
+            problems.iter().map(|p| p.id.as_str()).collect();
+        let existing = sqlx::query!("SELECT id FROM problems")
+            .fetch_all(&mut *tx)
+            .await?;
+        for row in existing {
+            if !keep.contains(row.id.as_str()) {
+                sqlx::query!("DELETE FROM problems WHERE id = ?", row.id)
+                    .execute(&mut *tx)
+                    .await?;
+            }
         }
 
         tx.commit().await?;
@@ -403,7 +436,7 @@ impl Store for SqliteStore {
         status: SubmissionStatus,
     ) -> Result<(), StoreError> {
         let id_text = id.to_string();
-        let mut tx = self.pool.begin().await?;
+        let mut tx = self.begin_immediate().await?;
 
         let row = sqlx::query!(
             "SELECT status, started_at FROM submissions WHERE id = ?",
@@ -452,7 +485,7 @@ impl Store for SqliteStore {
         verdict: Verdict,
     ) -> Result<(), StoreError> {
         let id_text = id.to_string();
-        let mut tx = self.pool.begin().await?;
+        let mut tx = self.begin_immediate().await?;
 
         let row = sqlx::query!(
             "SELECT user_id, problem_id, status FROM submissions WHERE id = ?",

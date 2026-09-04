@@ -7,7 +7,8 @@
 //! the trait and never a pool.
 //!
 //! [`BlobStore`] owns bytes: source blobs content-addressed by hash, logs
-//! keyed by submission. Filesystem now, S3 later, two methods either way.
+//! keyed by submission and attempt. Filesystem now, S3 later, two methods
+//! either way.
 //!
 //! `runs` is deliberately separate from `submissions`. A runner that dies
 //! mid-job and retries shows up as a second attempt for debugging, never as a

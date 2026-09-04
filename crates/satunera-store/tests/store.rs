@@ -411,6 +411,83 @@ async fn ten_thousand_submissions_keep_history_fast() {
 }
 
 #[tokio::test]
+async fn catalog_refresh_survives_existing_submissions() {
+    // The boot sequence: T07 rewrites the catalog while submissions
+    // foreign-key into it. Regression for the delete-then-insert strategy,
+    // which died on the FK the moment any submission existed.
+    let store = store().await;
+    let (user, problem_id) = seeded(&store).await;
+    store
+        .create_submission(new_submission(&user, &problem_id, "h1"))
+        .await
+        .unwrap();
+
+    // Same problem again (a re-boot), plus a new one: must succeed.
+    let mut updated = problem_row("week-1");
+    updated.title = "Retitled".to_string();
+    store
+        .replace_problems(vec![updated, problem_row("week-2")])
+        .await
+        .unwrap();
+
+    let week1 = store.problem(&problem_id).await.unwrap();
+    assert_eq!(week1.title, "Retitled");
+    assert_eq!(store.problems().await.unwrap().len(), 2);
+
+    // Dropping an unreferenced problem works; dropping one with submissions
+    // fails loudly rather than orphaning the learner's history.
+    store
+        .replace_problems(vec![problem_row("week-1")])
+        .await
+        .unwrap();
+    assert!(store
+        .replace_problems(vec![problem_row("week-2")])
+        .await
+        .is_err());
+}
+
+#[tokio::test]
+async fn concurrent_transitions_serialize_instead_of_busy_snapshot() {
+    // Two connections doing check-then-write on the same submission must
+    // produce IllegalTransition for the losers, never a raw database error.
+    let dir = tempfile::tempdir().unwrap();
+    let url = format!("sqlite:{}/judge.db", dir.path().display());
+    let store = std::sync::Arc::new(SqliteStore::open(&url).await.unwrap());
+    let (user, problem_id) = seeded(&store).await;
+
+    let submission = store
+        .create_submission(new_submission(&user, &problem_id, "h1"))
+        .await
+        .unwrap();
+    store
+        .set_submission_status(submission.id, SubmissionStatus::Preparing)
+        .await
+        .unwrap();
+
+    let tasks: Vec<_> = (0..10)
+        .map(|_| {
+            let store = store.clone();
+            tokio::spawn(async move { store.finish_submission(submission.id, Verdict::Ac).await })
+        })
+        .collect();
+
+    let mut accepted = 0;
+    for task in tasks {
+        match task.await.unwrap() {
+            Ok(()) => accepted += 1,
+            Err(StoreError::IllegalTransition { .. }) => {}
+            Err(other) => panic!("expected IllegalTransition, got {other}"),
+        }
+    }
+    assert_eq!(accepted, 1, "exactly one finish wins");
+
+    let done = store.submission(submission.id).await.unwrap();
+    assert_eq!(done.verdict, Some(Verdict::Ac));
+    let progress = store.progress(user.id, &problem_id).await.unwrap().unwrap();
+    assert_eq!(progress.attempts, 1, "the losers must not double-count");
+}
+
+#[tokio::test]
 async fn migrations_roll_forward_and_back() {
     let dir = tempfile::tempdir().unwrap();
     let url = format!("sqlite:{}/judge.db", dir.path().display());

@@ -2,8 +2,8 @@
 //!
 //! Two methods plus a URI so the S3 swap in phase 2 is an afternoon. The
 //! filesystem implementation writes sources content-addressed under
-//! `blobs/<hash>` and logs under `logs/<submission_id>`, matching the T06
-//! layout of `/var/judge/{blobs,logs}`.
+//! `blobs/<hash>` and logs under `logs/<submission_id>/<attempt>`, matching
+//! the T06 layout of `/var/judge/{blobs,logs}`.
 
 use std::path::{Path, PathBuf};
 
@@ -49,16 +49,26 @@ pub enum BlobKind {
     /// A submitted source archive, content-addressed. Writing the same bytes
     /// twice is a no-op, which is what makes dedupe safe.
     Source(Sha256Hash),
-    /// The captured log of one submission's judging.
-    Log(SubmissionId),
+    /// The captured log of one judging attempt. Keyed by attempt as well as
+    /// submission: an SE retry must not overwrite the log of the very attempt
+    /// someone needs to debug.
+    Log {
+        submission: SubmissionId,
+        /// 1-based, same number the `runs` row carries.
+        attempt: u32,
+    },
 }
 
 impl BlobKind {
-    /// The store-relative key: `blobs/<hash>` or `logs/<submission_id>`.
+    /// The store-relative key: `blobs/<hash>` or
+    /// `logs/<submission_id>/<attempt>`.
     pub fn key(&self) -> String {
         match self {
             BlobKind::Source(hash) => format!("blobs/{hash}"),
-            BlobKind::Log(id) => format!("logs/{id}"),
+            BlobKind::Log {
+                submission,
+                attempt,
+            } => format!("logs/{submission}/{attempt}"),
         }
     }
 }
@@ -156,11 +166,41 @@ mod tests {
     #[tokio::test]
     async fn missing_blob_is_not_found_not_io_error() {
         let (_dir, store) = store();
-        let kind = BlobKind::Log(SubmissionId::generate());
+        let kind = BlobKind::Log {
+            submission: SubmissionId::generate(),
+            attempt: 1,
+        };
         assert!(matches!(
             store.get(&kind).await,
             Err(BlobError::NotFound { .. })
         ));
+    }
+
+    #[tokio::test]
+    async fn a_retry_does_not_overwrite_the_previous_attempts_log() {
+        let (_dir, store) = store();
+        let submission = SubmissionId::generate();
+        let first = BlobKind::Log {
+            submission,
+            attempt: 1,
+        };
+        let second = BlobKind::Log {
+            submission,
+            attempt: 2,
+        };
+
+        store
+            .put(&first, b"SE: bitcoind never came up")
+            .await
+            .unwrap();
+        store.put(&second, b"AC on retry").await.unwrap();
+
+        assert_eq!(
+            store.get(&first).await.unwrap(),
+            b"SE: bitcoind never came up"
+        );
+        assert_eq!(store.get(&second).await.unwrap(), b"AC on retry");
+        assert_ne!(store.uri(&first), store.uri(&second));
     }
 
     #[tokio::test]
@@ -196,8 +236,12 @@ mod tests {
     #[test]
     fn keys_are_namespaced() {
         let source = BlobKind::Source(Sha256Hash::of(b"x"));
-        let log = BlobKind::Log(SubmissionId::generate());
+        let submission = SubmissionId::generate();
+        let log = BlobKind::Log {
+            submission,
+            attempt: 2,
+        };
         assert!(source.key().starts_with("blobs/"));
-        assert!(log.key().starts_with("logs/"));
+        assert_eq!(log.key(), format!("logs/{submission}/2"));
     }
 }
