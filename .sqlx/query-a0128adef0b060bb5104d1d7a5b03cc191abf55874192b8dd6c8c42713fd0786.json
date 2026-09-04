@@ -1,0 +1,92 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id, submission_id, attempt, runner_id, fixture, exit_code,\n                    verdict, output, log_uri, boot_ms, build_ms, run_ms, created_at\n             FROM runs\n             WHERE submission_id = ?\n             ORDER BY attempt",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "submission_id",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "attempt",
+        "ordinal": 2,
+        "type_info": "Integer"
+      },
+      {
+        "name": "runner_id",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "fixture",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "exit_code",
+        "ordinal": 5,
+        "type_info": "Integer"
+      },
+      {
+        "name": "verdict",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "output",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "log_uri",
+        "ordinal": 8,
+        "type_info": "Text"
+      },
+      {
+        "name": "boot_ms",
+        "ordinal": 9,
+        "type_info": "Integer"
+      },
+      {
+        "name": "build_ms",
+        "ordinal": 10,
+        "type_info": "Integer"
+      },
+      {
+        "name": "run_ms",
+        "ordinal": 11,
+        "type_info": "Integer"
+      },
+      {
+        "name": "created_at",
+        "ordinal": 12,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "a0128adef0b060bb5104d1d7a5b03cc191abf55874192b8dd6c8c42713fd0786"
+}

@@ -1,0 +1,23 @@
+[package]
+name = "satunera-store"
+description = "Durable state behind two seams: the Store trait over SQLite and the BlobStore trait over the filesystem."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+satunera-contracts = { path = "../satunera-contracts" }
+async-trait = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+sha2 = { workspace = true }
+hex = { workspace = true }
+sqlx = { workspace = true }
+thiserror = { workspace = true }
+time = { workspace = true }
+tokio = { workspace = true }
+ulid = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }

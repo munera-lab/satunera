@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO problems\n                     (id, commit_sha, title, category, difficulty, manifest, updated_at)\n                 VALUES (?, ?, ?, ?, ?, ?, ?)\n                 ON CONFLICT (id) DO UPDATE SET\n                     commit_sha = excluded.commit_sha,\n                     title = excluded.title,\n                     category = excluded.category,\n                     difficulty = excluded.difficulty,\n                     manifest = excluded.manifest,\n                     updated_at = excluded.updated_at",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 7
+    },
+    "nullable": []
+  },
+  "hash": "dce0e7e77ac7c1f2d68b6dfdd3cb3540e2d615b3b3e3064fb9fb60b984a91ae9"
+}
