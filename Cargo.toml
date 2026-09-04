@@ -1,6 +1,10 @@
 [workspace]
 resolver = "2"
-members = ["crates/satunera-contracts", "crates/satunera-store"]
+members = [
+    "crates/satunera-contracts",
+    "crates/satunera-server",
+    "crates/satunera-store",
+]
 
 [workspace.package]
 version = "0.1.0"
@@ -21,6 +25,15 @@ sha2 = "0.10"
 hex = "0.4"
 time = { version = "0.3", features = ["formatting", "parsing", "serde"] }
 tempfile = "3"
+ammonia = "4"
+axum = "0.8"
+flate2 = "1"
+pulldown-cmark = { version = "0.13", default-features = false, features = ["html"] }
+tar = "0.4"
+tower = "0.5"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+http-body-util = "0.1"
 
 [profile.dev]
 opt-level = 1
